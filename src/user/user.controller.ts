@@ -21,7 +21,6 @@ import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllUsers(@Query('searchTerm') searchTerm: string) {
     return await this.userService.allUsers(searchTerm);
