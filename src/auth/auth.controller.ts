@@ -34,9 +34,4 @@ export class AuthController {
   async getNewTokens(@Body() dto: RefreshTokenDto) {
     return this.authService.getNewTokens(dto);
   }
-
-  // @Post('/logout')
-  // signin() {
-  //   this.authService.logout();
-  // }
 }

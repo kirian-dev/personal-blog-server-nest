@@ -1,6 +1,10 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { hash, compare, genSalt } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
@@ -13,7 +17,6 @@ import {
   INVALID_TOKEN_ERROR,
 } from 'src/common/constants/errors.constants';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { UnauthorizedException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class AuthService {
@@ -38,10 +41,10 @@ export class AuthService {
       email: dto.email,
       password: hashedPassword,
     });
+    await newUser.save();
 
     const tokens = await this.createTokens(String(newUser._id));
 
-    await newUser.save();
     return { user: this.returnUserFields(newUser), ...tokens };
   }
 
@@ -67,12 +70,10 @@ export class AuthService {
       throw new BadRequestException(WRONG_PASSWORDS_ERROR);
     }
 
-    const isValidPassword = compare(dto.password, user.password);
-
+    const isValidPassword = await compare(dto.password, user.password);
     if (!isValidPassword) {
       throw new BadRequestException(WRONG_PASSWORDS_ERROR);
     }
-
     return user;
   }
 
@@ -110,6 +111,7 @@ export class AuthService {
       _id: user._id,
       email: user.email,
       roles: user.roles,
+      username: user.username,
     };
   }
 

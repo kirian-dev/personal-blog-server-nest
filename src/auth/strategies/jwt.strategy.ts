@@ -13,14 +13,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.get('JWT_SECRET'),
     });
   }
 
   async validate({ _id }: Pick<User, '_id'>) {
-    const user = await this.userModel.findById(_id).exec();
+    console.log('validating user');
+    const user = await this.userModel.findById({ _id }).exec();
     return user;
   }
 }

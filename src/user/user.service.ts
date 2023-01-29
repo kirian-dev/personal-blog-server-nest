@@ -17,7 +17,10 @@ export class UserService {
   ) {}
 
   async byId(_id: string) {
-    const user = await this.usersModel.findById({ _id }).exec();
+    const user = await this.usersModel
+      .findById({ _id })
+      .select('createdAt _id username email roles')
+      .exec();
 
     if (!user) {
       throw new NotFoundException();
@@ -73,6 +76,7 @@ export class UserService {
     }
 
     user.email = dto.email;
+    user.username = dto.username;
     if (dto.roles.includes(Role.Admin)) {
       user.roles = dto.roles;
     }

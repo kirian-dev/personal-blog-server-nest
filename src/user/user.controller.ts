@@ -9,40 +9,43 @@ import {
   Body,
   Param,
   Query,
-  UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Get } from '@nestjs/common/decorators';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { User } from './decorators/user.decorator';
 import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { Role } from 'src/common/enums/roles.enum';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Auth(Role.Admin)
   @Get()
   async getAllUsers(@Query('searchTerm') searchTerm: string) {
     return await this.userService.allUsers(searchTerm);
   }
 
+  @Auth()
   @Get('profile')
   async getProfile(@User('_id') _id: string) {
     return await this.userService.byId(_id);
   }
 
+  @Auth()
   @UsePipes(new ValidationPipe())
   @Put('profile')
   @HttpCode(200)
-  @Auth()
   async updateProfile(@User('_id') _id: string, @Body() dto: UpdateUserDto) {
     return await this.userService.updateProfile(_id, dto);
   }
 
+  @Auth(Role.Admin)
   @UsePipes(new ValidationPipe())
   @Put(':id')
   @HttpCode(200)
-  @Auth()
   async updateUser(
     @Param('id', IdValidationPipe) id: string,
     @Body() dto: UpdateUserDto,
@@ -50,10 +53,10 @@ export class UserController {
     return await this.userService.updateProfile(id, dto);
   }
 
-  @UsePipes(new ValidationPipe())
-  @Put(':id')
-  @HttpCode(200)
   @Auth()
+  @UsePipes(new ValidationPipe())
+  @Delete(':id')
+  @HttpCode(204)
   async deleteUser(@Param('id', IdValidationPipe) id: string) {
     return await this.userService.delete(id);
   }
