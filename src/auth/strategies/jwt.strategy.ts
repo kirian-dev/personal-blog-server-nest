@@ -20,7 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ _id }: Pick<User, '_id'>) {
-    console.log('validating user');
     const user = await this.userModel.findById({ _id }).exec();
     return user;
   }
