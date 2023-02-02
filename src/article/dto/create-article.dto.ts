@@ -1,11 +1,13 @@
-import { IsString, Max } from 'class-validator';
+import { IsString, MaxLength, MinLength } from 'class-validator';
 export class CreateArticleDto {
   @IsString()
-  @Max(255)
+  @MaxLength(255)
+  @MinLength(3)
   title: string;
 
   @IsString()
-  @Max(5000)
+  @MinLength(3)
+  @MaxLength(5000)
   description: string;
   image?: string;
 }
