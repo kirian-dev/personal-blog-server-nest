@@ -22,8 +22,12 @@ export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Get()
-  async getArticles(@Query('page') page = 1, @Query('limit') limit = 5) {
-    return this.articleService.allArticles(page, limit);
+  async getArticles(
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+    @Query('searchTerm') searchTerm = '',
+  ) {
+    return this.articleService.allArticles(page, limit, searchTerm);
   }
 
   @Get(':id')

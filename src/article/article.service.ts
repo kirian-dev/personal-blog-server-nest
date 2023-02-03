@@ -12,14 +12,31 @@ export class ArticleService {
     @InjectModel(Article.name) private articleModel: Model<ArticleDocument>,
   ) {}
 
-  async allArticles(page: number, limit: number) {
+  async allArticles(
+    page: number,
+    limit: number,
+    searchTerm?: string,
+  ): Promise<{
+    articles: ArticleDocument[];
+    meta: { total: number; pageCount: number };
+  }> {
     const skip = (page - 1) * limit;
+    let options = {};
 
+    if (searchTerm) {
+      options = {
+        $or: [
+          {
+            title: new RegExp(searchTerm, 'i'),
+          },
+        ],
+      };
+    }
     const totalArticlesPromise = await this.articleModel
       .countDocuments({})
       .exec();
     const articlesPromise = await this.articleModel
-      .find({})
+      .find(options)
       .limit(limit)
       .skip(skip)
       .exec();
@@ -39,7 +56,7 @@ export class ArticleService {
   }
 
   async byId(id: string) {
-    const article = await this.articleModel.findById(id).exec();
+    const article = await this.articleModel.findOne({ id }).exec();
 
     if (!article) {
       throw new BadRequestException(ARTICLE_NOT_FOUND_ERROR);
