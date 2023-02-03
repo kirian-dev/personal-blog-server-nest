@@ -3,7 +3,7 @@ import { ARTICLE_NOT_FOUND_ERROR } from './../common/constants/errors.constants'
 import { InjectModel } from '@nestjs/mongoose';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Article, ArticleDocument } from './schemas/article.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Injectable()
@@ -56,7 +56,9 @@ export class ArticleService {
   }
 
   async byId(id: string) {
-    const article = await this.articleModel.findOne({ id }).exec();
+    const article = await this.articleModel
+      .findOne({ _id: new mongoose.Types.ObjectId(id) })
+      .exec();
 
     if (!article) {
       throw new BadRequestException(ARTICLE_NOT_FOUND_ERROR);

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import {
@@ -18,7 +18,7 @@ export class UserService {
 
   async byId(_id: string) {
     const user = await this.usersModel
-      .findById({ _id })
+      .findOne({ _id: new mongoose.Types.ObjectId(_id) })
       .select('createdAt _id username email roles')
       .exec();
 

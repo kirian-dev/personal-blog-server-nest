@@ -21,6 +21,7 @@ import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
+  @UsePipes(new ValidationPipe())
   @Get()
   async getArticles(
     @Query('page') page = 1,
@@ -30,6 +31,7 @@ export class ArticleController {
     return this.articleService.allArticles(page, limit, searchTerm);
   }
 
+  @UsePipes(new ValidationPipe())
   @Get(':id')
   async getArticle(@Param('id') id: string) {
     return this.articleService.byId(id);
