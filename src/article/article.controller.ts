@@ -33,7 +33,7 @@ export class ArticleController {
 
   @UsePipes(new ValidationPipe())
   @Get(':id')
-  async getArticle(@Param('id') id: string) {
+  async getArticle(@Param('id') id: number) {
     return this.articleService.byId(id);
   }
 

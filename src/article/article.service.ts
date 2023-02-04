@@ -18,44 +18,38 @@ export class ArticleService {
     searchTerm?: string,
   ): Promise<{
     articles: ArticleDocument[];
-    meta: { total: number; pageCount: number };
+    meta: {
+      total: number;
+      pageCount: number;
+      prevPage: number;
+      currPage: number;
+    };
   }> {
     const skip = (page - 1) * limit;
-    let options = {};
+    let query = {};
 
     if (searchTerm) {
-      options = {
-        $or: [
-          {
-            title: new RegExp(searchTerm, 'i'),
-          },
-        ],
+      query = {
+        title: new RegExp(searchTerm, 'i'),
       };
     }
-    const totalArticlesPromise = await this.articleModel
-      .countDocuments({})
-      .exec();
-    const articlesPromise = await this.articleModel
-      .find(options)
-      .limit(limit)
-      .skip(skip)
-      .exec();
-
     const [total, articles] = await Promise.all([
-      totalArticlesPromise,
-      articlesPromise,
+      this.articleModel.countDocuments(query).exec(),
+      this.articleModel.find(query).limit(limit).skip(skip).exec(),
     ]);
-    const pageCount = total / limit;
+    const pageCount = Math.ceil(total / limit);
     return {
       articles,
       meta: {
         total,
         pageCount,
+        prevPage: page - 1,
+        currPage: Number(page),
       },
     };
   }
 
-  async byId(id: string) {
+  async byId(id: number) {
     const article = await this.articleModel
       .findOne({ _id: new mongoose.Types.ObjectId(id) })
       .exec();
