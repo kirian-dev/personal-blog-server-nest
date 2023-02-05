@@ -2,23 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 export type ArticleDocument = Article & Document;
-
-@Schema()
-export class Comment {
-  @Prop({
-    type: Types.ObjectId,
-    required: true,
-    default: () => new Types.ObjectId(),
-  })
-  _id: Types.ObjectId;
-
-  @Prop({ ref: 'User' })
-  user: Types.ObjectId;
-
-  @Prop({ required: true })
-  body: string;
-}
-
 @Schema()
 export class Article {
   @Prop({

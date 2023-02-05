@@ -16,6 +16,7 @@ import {
 import { ArticleService } from './article.service';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { IdValidationPipe } from 'src/common/pipes/id-validation.pipe';
+import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Controller('articles')
 export class ArticleController {
@@ -60,5 +61,31 @@ export class ArticleController {
   @UsePipes(new ValidationPipe())
   async deleteArticle(@Param('id', IdValidationPipe) id: string) {
     return this.articleService.deleteArticle(id);
+  }
+
+  @Get(':id/comments')
+  @UsePipes(new ValidationPipe())
+  async getComments(@Param('id', IdValidationPipe) id: string) {
+    return this.articleService.getComments(id);
+  }
+
+  @Auth()
+  @Post(':id/comments')
+  async createComment(
+    @Param('id', IdValidationPipe) id: string,
+    @Body() dto: CreateCommentDto,
+  ) {
+    return this.articleService.createComment(id, dto);
+  }
+
+  @Auth()
+  @Delete(':id/comments/:commentId')
+  @HttpCode(204)
+  @UsePipes(new ValidationPipe())
+  async deleteComment(
+    @Param('id', IdValidationPipe) id: string,
+    @Param('commentId', IdValidationPipe) commentId: string,
+  ) {
+    return this.articleService.deleteComment(id, commentId);
   }
 }
