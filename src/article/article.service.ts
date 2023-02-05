@@ -92,7 +92,6 @@ export class ArticleService {
   }
 
   async deleteArticle(id: string) {
-    console.log(id);
     return this.articleModel
       .findOneAndDelete({ _id: new mongoose.Types.ObjectId(id) })
       .exec();

@@ -1,4 +1,3 @@
-import { JwtAuthGuard } from './../auth/guards/jwt.guard';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import {
   Controller,
@@ -29,14 +28,14 @@ export class UserController {
   }
 
   @Auth()
-  @Get('profile')
+  @Get('profile/:id')
   async getProfile(@User('_id') _id: string) {
     return await this.userService.byId(_id);
   }
 
   @Auth()
   @UsePipes(new ValidationPipe())
-  @Put('profile')
+  @Put('profile/:id')
   @HttpCode(200)
   async updateProfile(@User('_id') _id: string, @Body() dto: UpdateUserDto) {
     return await this.userService.updateProfile(_id, dto);

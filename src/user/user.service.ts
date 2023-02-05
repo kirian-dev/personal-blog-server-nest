@@ -65,14 +65,17 @@ export class UserService {
       throw new NotFoundException(EMAIL_BUSY_ERROR);
     }
 
-    if (dto.password !== dto.confirm_password) {
-      throw new NotFoundException(PASSWORD_NOT_EQUAL_ERROR);
-    }
-
     if (dto.password) {
-      const salt = await genSalt(10);
-      const hashPassword = await hash(dto.password, salt);
-      user.password = hashPassword;
+      console.log(dto.password, dto.confirm_password);
+      if (dto.password !== dto.confirm_password) {
+        throw new NotFoundException(PASSWORD_NOT_EQUAL_ERROR);
+      }
+
+      if (dto.password) {
+        const salt = await genSalt(10);
+        const hashPassword = await hash(dto.password, salt);
+        user.password = hashPassword;
+      }
     }
 
     user.email = dto.email;
@@ -83,7 +86,7 @@ export class UserService {
 
     await user.save();
 
-    return;
+    return user;
   }
 
   async delete(id: string) {
