@@ -45,8 +45,7 @@ export class ArticleController {
   }
 
   @Auth(Role.Admin)
-  @Put()
-  @UsePipes(new ValidationPipe())
+  @Put(':id')
   @HttpCode(200)
   async updateArticle(
     @Body() dto: UpdateArticleDto,
@@ -56,8 +55,8 @@ export class ArticleController {
   }
 
   @Auth(Role.Admin)
-  @Post()
-  @Delete()
+  @Delete(':id')
+  @HttpCode(204)
   @UsePipes(new ValidationPipe())
   async deleteArticle(@Param('id', IdValidationPipe) id: string) {
     return this.articleService.deleteArticle(id);

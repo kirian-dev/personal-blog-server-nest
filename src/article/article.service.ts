@@ -74,7 +74,9 @@ export class ArticleService {
   }
 
   async updateArticle(dto: UpdateArticleDto, id: string) {
-    const article = await this.articleModel.findById(id).exec();
+    const article = await this.articleModel
+      .findOne({ _id: new mongoose.Types.ObjectId(id) })
+      .exec();
 
     if (!article) {
       throw new BadRequestException(ARTICLE_NOT_FOUND_ERROR);
@@ -90,6 +92,9 @@ export class ArticleService {
   }
 
   async deleteArticle(id: string) {
-    return this.articleModel.findByIdAndDelete(id).exec();
+    console.log(id);
+    return this.articleModel
+      .findOneAndDelete({ _id: new mongoose.Types.ObjectId(id) })
+      .exec();
   }
 }
