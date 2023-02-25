@@ -15,8 +15,8 @@ File upload and download capabilities
 <li>
 User management, including account creation, deletion, and update
 </li>
-JWT-based authentication and authorization
-<li></li>
+
+<li>JWT-based authentication and authorization</li>
 </ul>
 
 <p align="center">
