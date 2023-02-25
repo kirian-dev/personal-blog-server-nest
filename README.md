@@ -1,3 +1,24 @@
+<h1>Personal blog nestjs </h1>
+<p>The purpose of this project is to create a backend server for a personal blog. The server will handle user authentication and authorization, provide endpoints for creating, reading, updating, and deleting articles, managing files, and managing user accounts. The server is implemented using the NestJS framework, which is a modern and efficient Node.js framework designed to help developers build scalable and modular server-side applications.
+</p>
+<h2>Features</h2>
+<ul>
+<li>
+Authentication and authorization for users, and admin
+</li>
+<li>
+Article CRUD operations
+</li>
+<li>
+File upload and download capabilities
+</li>
+<li>
+User management, including account creation, deletion, and update
+</li>
+JWT-based authentication and authorization
+<li></li>
+</ul>
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
